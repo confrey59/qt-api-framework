@@ -12,7 +12,7 @@ Cross-platform (Linux/macOS/Windows), thread-safe, pip-installable.
 
 ## Installation
  ```bash
-git clone https://github.com/your-org/qt-api-framework.git
+git clone https://github.com/confrey59/qt-api-framework.git
 cd qt-api-framework
 python3 -m venv .venv && source .venv/bin/activate
 pip install -e .
