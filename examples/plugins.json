@@ -1,0 +1,12 @@
+{
+  "plugins": [
+    {
+      "id": "reference_plugin",
+      "module": "examples.reference_plugin.plugin",
+      "class": "ReferencePlugin",
+      "title": "Plugin di Esempio",
+      "icon": null,
+      "requires_auth": false
+    }
+  ]
+}

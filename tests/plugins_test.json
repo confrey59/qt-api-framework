@@ -1,0 +1,20 @@
+{
+  "plugins": [
+    {
+      "id": "test_dummy",
+      "module": "tests.dummy_plugin",
+      "class": "DummyPlugin",
+      "title": "Test Dummy",
+      "icon": null,
+      "requires_auth": false
+    },
+    {
+      "id": "invalid_plugin",
+      "module": "tests.nonexistent_module",
+      "class": "FakeClass",
+      "title": "Errore Atteso",
+      "icon": null,
+      "requires_auth": false
+    }
+  ]
+}
