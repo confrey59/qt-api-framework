@@ -5,14 +5,15 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "qt-api-framework"
 version = "0.2.0"
-description = "Modular API-driven desktop GUI framework built on PySide6"
+description = "Modular, API-driven desktop GUI framework built on PySide6"
 readme = "README.md"
 requires-python = ">=3.12"
 license = {text = "MIT"}
 dependencies = [
     "PySide6>=6.6.0",
     "httpx>=0.27.0",
-    "websockets>=13.0"
+    "websockets>=13.0",
+    "platformdirs>=4.0.0"
 ]
 classifiers = [
     "Programming Language :: Python :: 3",
@@ -21,12 +22,12 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Application Frameworks",
     "Framework :: PySide"
 ]
+
 [project.scripts]
 qt-api-framework = "qt_api_framework.__main__:main"
 
 [project.urls]
-Homepage = "https://github.com/your-org/qt-api-framework"
-Documentation = "https://github.com/your-org/qt-api-framework#readme"
+Homepage = "https://github.com/confrey59/qt-api-framework"
 
 [tool.setuptools.packages.find]
 where = ["src"]
