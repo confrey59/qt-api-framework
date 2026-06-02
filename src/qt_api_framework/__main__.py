@@ -1,55 +1,50 @@
-# src/qt_api_framework/__main__.py
+"""
+Entry point for qt-api-framework.
+Neutral launch: empty shell by default. Config injection is optional.
+"""
 from __future__ import annotations
 
 import argparse
 import json
-import logging
 import sys
+import logging
 from pathlib import Path
-
 from PySide6.QtWidgets import QApplication
 
-def main():
+from qt_api_framework.core.paths import paths
+from qt_api_framework.core.shell import MainShell
+
+def main() -> int:
     parser = argparse.ArgumentParser(description="qt-api-framework CLI")
-    parser.add_argument("--config", default="config/framework.json", help="Path to framework config")
-    parser.add_argument("--plugins", default="config/plugins.json", help="Path to plugins config")
+    parser.add_argument("--config", default=None, help="Path to JSON config file (initializes core immediately)")
     args = parser.parse_args()
 
-    # Setup logging
     logging.basicConfig(level=logging.INFO, format="%(levelname)-8s | %(message)s")
+    logger = logging.getLogger(__name__)
 
-    # Load config
-    cfg_path = Path(args.config)
-    plg_path = Path(args.plugins)
-    framework_cfg = {}
-    if cfg_path.exists():
-        framework_cfg = json.loads(cfg_path.read_text())
-        logging.info(f"📖 Loaded framework config from {cfg_path}")
-    else:
-        logging.warning("⚠️ No framework.json found. Using defaults.")
+    paths.ensure_dirs_exist()
 
-    # Init Qt
     app = QApplication(sys.argv)
-    app.setApplicationName(framework_cfg.get("window_title", "qt-api-framework"))
+    app.setApplicationName("qt-api-framework")
+    app.setOrganizationName("confrey59")
+    # Qt6 enables HighDPI automatically. Removed deprecated setAttribute calls.
 
-    # Core Components
-    from qt_api_framework.network.api_client import QtNetworkWorker
-    from qt_api_framework.core.auth_flow import AuthFlow
-    from qt_api_framework.core.plugin_loader import PluginLoader
-    from qt_api_framework.core.shell import MainShell
+    config = None
+    if args.config:
+        config_path = Path(args.config)
+        if config_path.exists():
+            with open(config_path, "r", encoding="utf-8") as f:
+                config = json.load(f)
+            logger.info(f"Loaded config from {config_path}")
+        else:
+            logger.error(f"Config file not found: {config_path}")
+            return 1
 
-    api_url = framework_cfg.get("api_base_url", "http://127.0.0.1:8000")
-    timeout = framework_cfg.get("timeout", 10)
-    retries = framework_cfg.get("max_retries", 3)
-
-    worker = QtNetworkWorker(api_url, timeout, retries)
-    auth = AuthFlow(worker)
-    loader = PluginLoader(config_path=plg_path, api_client=worker)
-
-    shell = MainShell(framework_cfg, worker, auth, loader)
+    # Launch neutral shell. Core initializes only if config is provided.
+    shell = MainShell(config=config)
     shell.show()
 
-    sys.exit(app.exec())
+    return app.exec()
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

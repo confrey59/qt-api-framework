@@ -25,5 +25,5 @@ ENV/
 *.log
 *.sqlite
 *.sqlite3
-config/*.local.json
-examples/*/__pycache__/
+.DS_Store
+Thumbs.db
